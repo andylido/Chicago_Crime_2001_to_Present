@@ -1,7 +1,17 @@
 import requests
 import json
 
-def get_resp(year):
+def get_resp(api):
+    response = requests.get(api)
+    if response.status_code == 200:
+        resp = response.json()
+        print(len(resp))
+        return response.json()
+    else:
+        print("Error. Status Code:",response.status_code,"\n")
+        return 1
+    
+def get_resp_param(year):
     parameters = {
     "year": year
     }
@@ -12,6 +22,18 @@ def get_resp(year):
         print("Error. Status Code:",response.status_code,"\n")
         return 1
 
+def get_headers(api):
+    response = requests.get(api)
+    response.encoding = 'utf-8'
+    headers = response.headers
+    if response.status_code == 200:
+        for dict_key in headers:
+            print(dict_key, headers[dict_key])
+
+    else:
+        print("Error. Status Code:",response.status_code,"\n")
+        return 1
+      
 def print_resp(data):
     for dict_item in data:
         for item in dict_item:
@@ -50,18 +72,19 @@ def count_crimes(data, year):
     #print(" Total Count:", len(ordered_L),"\n")
     
 def main():
+    api = "https://data.cityofchicago.org/resource/crimes.json"
+    
     start = 2001
     years= []
+    
+    get_resp(api)
+    #get_headers(api)
+    '''
     for i in range(19):
         years.append(start)
         start+=1
     for year in years:
-        count_crimes(get_resp(year),year)
-    #data2017 = get_resp(2017)
-    #data2018 = get_resp(2018)
-    #data2019 = get_resp(2019)
-    #count_crimes(data2017,2017)
-    #count_crimes(data2018, 2018)
-    #count_crimes(data2019, 2019)
+        count_crimes(get_resp_param(year),year)
+    '''
     
 main()
